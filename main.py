@@ -22,6 +22,8 @@ def main():
     clock = pygame.time.Clock() # Initialize the clock here
     running = True
     text = "Button?"
+    clickspersec = 0
+    frames = 0
 
     def darken(color, dark):
         return (pygame.math.clamp(color[0] * dark, 0, 255),pygame.math.clamp(color[1] * dark, 0, 255),pygame.math.clamp(color[2] * dark, 0, 255),)
@@ -43,6 +45,8 @@ def main():
 
 
     while running:
+        frames += 1
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -50,6 +54,7 @@ def main():
                 if button.collidepoint(event.pos):
                     button_x = rand.randint(0, WINDOW_WIDTH)
                     button_y = rand.randint(0, WINDOW_HEIGHT)
+                    clickspersec += 1
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
@@ -67,13 +72,13 @@ def main():
             faux_x = button_length + button_hovertime
             faux_y = button_width + button_hovertime
             button_color = (darken(button_color, 0.8))
-            text = "Play!"
+            text = "Click!"
         else:
             button_hovertime = pygame.math.clamp((button_hovertime + 1) * 0.9, 0, 30)
             faux_x = button_length + button_hovertime
             faux_y = button_width + button_hovertime
             button_color = (darken(button_color, 0.6))
-            text = "Play?"
+            text = "Click?"
 
         button.size = [faux_x, faux_y]
         button.topleft = [button_x - faux_x/2, button_y - faux_y/2]
@@ -89,8 +94,12 @@ def main():
         surf_rect2 = surf2.get_rect()
         surf_rect2.center = button.center
 
+        
+        surf3 = font.render(str(clickspersec), True, (0,0,0))
+
         screen.blit(surf2, surf_rect2) # surf is the text for the button, and surf_rect is the surface (area on the screen) where the button text will be drawn
         screen.blit(surf, surf_rect) # surf is the text for the button, and surf_rect is the surface (area on the screen) where the button text will be drawn
+        screen.blit(surf3, pygame.rect.Rect(0,0,0,0)) # surf is the text for the button, and surf_rect is the surface (area on the screen) where the button text will be drawn
 
 
         pygame.display.flip()
